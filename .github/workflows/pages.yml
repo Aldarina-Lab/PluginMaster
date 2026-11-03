@@ -1,6 +1,8 @@
 name: Publish PluginMaster
 on:
   workflow_dispatch:
+  push: { branches: [main] }
+  schedule: [{ cron: "23 * * * *" }]
   repository_dispatch:
     types: [plugin-released]
 permissions:
@@ -22,7 +24,7 @@ jobs:
         with: { python-version: "3.13" }
       - run: python -m unittest -v
       - run: python generate_pluginmaster.py
-        env: { GITHUB_TOKEN: "${{ github.token }}" }
+        env: { GITHUB_TOKEN: "${{ secrets.PLUGIN_READ_TOKEN }}" }
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
       - id: deployment
